@@ -1,0 +1,37 @@
+#include <stdio.h>
+#define Max_livros 20
+
+typedef struct {
+    char nome [60];
+    int preco;
+}livro
+
+void main{
+    livro listaLivros[Max_livros];
+    int sair = 0;
+    int opcao;
+    while(!sair){
+        switch(opcao) {
+            
+            case 1:
+                sair = 1;
+                break;
+                
+            case 2:
+                ordenar_nome();
+                break;
+            
+            case 3:
+                ordenar_preco();
+                break;
+        }
+    }
+}
+
+void ordenar_nome(){
+    
+}
+
+void ordenar_preco(){
+    
+}
