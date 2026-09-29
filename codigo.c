@@ -35,3 +35,4 @@ void ordenar_nome(){
 void ordenar_preco(){
     
 }
+https://docs.google.com/document/d/1JlH3j47NdR65NOETjCDFXjR0HkNj7QyjqdaaZ-pyPr4/edit?usp=sharing
