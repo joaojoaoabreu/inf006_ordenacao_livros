@@ -4,7 +4,7 @@
 typedef struct {
     char nome [60];
     int preco;
-}livro
+} livro;
 
 void main{
     livro lista_livros[MAX_LIVROS];
