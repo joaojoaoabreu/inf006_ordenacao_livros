@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define Max_livros 20
+#define MAX_LIVROS 20
 
 typedef struct {
     char nome [60];
@@ -7,7 +7,7 @@ typedef struct {
 }livro
 
 void main{
-    livro listaLivros[Max_livros];
+    livro lista_livros[MAX_LIVROS];
     int sair = 0;
     int opcao;
     while(!sair){
