@@ -16,7 +16,7 @@ void main{
     livro lista_ordenado[MAX_LIVROS]
     int sair = 0;
     int opcao;
-    int numlivros;
+    int numlivros=0;
     while(!sair){
         switch(opcao) {
             
