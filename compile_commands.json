@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "file": "src/books.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "src/books.c",
+      "-o",
+      "app"
+    ],
+    "directory": "/home/brunov/codigos/ifba/inf006/inf006_ordenacao_livros",
+    "output": "app"
+  },
+  {
+    "file": "src/codigo.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "src/codigo.c",
+      "-o",
+      "app"
+    ],
+    "directory": "/home/brunov/codigos/ifba/inf006/inf006_ordenacao_livros",
+    "output": "app"
+  }
+]

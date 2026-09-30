@@ -7,7 +7,7 @@ OUT = app
 all: $(OUT)
 
 $(OUT): $(SRC)
-	@bear -- $(CC) $(CFLAGS) $(RAYLIB) -o $(OUT)
+	@bear -- $(CC) $(CFLAGS) $(RAYLIB) $(SRC) -o $(OUT)
 
 clean:
 	@rm $(OUT)
