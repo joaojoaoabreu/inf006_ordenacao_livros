@@ -21,7 +21,18 @@ static inline int preco_decrescente(livro l1, livro l2);
 int ordenar_nome(livro *lista_livros, int *numlivros);
 int ordenar_preco_crescente(livro *lista_livros, livro *lista_livros_ordenados, int numlivros);
 
+// Pequena abstração pra ficar mais bonitinho :shushing-face:
+// Foi só um exemplo pra mostrar pra Vitor, mas dá pra implementar tbm assim.
+#define lista_dupla_via for (int i = ini; ini < fim ? i < fim : i > fim; ini < fim ? ++i : --i)
 
+// Um teste pra saber se é possível fazer uma única função que
+// lista crescente ou decrescente mesmo só com 2 parâmetros
+int fds(int ini, int fim)
+{
+	lista_dupla_via {
+	}
+	return 1;
+}
 
 int main() {
     livro lista_livros[MAX_LIVROS];
