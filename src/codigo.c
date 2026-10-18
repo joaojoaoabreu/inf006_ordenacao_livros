@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h> // Fixed: Added for strcmp()
 
-#define MAX_LIVROS 20
+#define MAX_LIVROS 10
 #define ORDENAR_ERRO -1
 #define ORDENAR_SUCESSO -2
 
@@ -15,7 +15,7 @@ typedef struct {
 typedef int (*condicao)(livro, livro);
 
 int sort(livro *lista, int t, condicao cf);
-void imprimir_json(livro lista_livros[]);
+void imprimir_json(livro lista_livros[], int size);
 static inline int preco_crescente(livro l1, livro l2);
 static inline int preco_decrescente(livro l1, livro l2);
 
@@ -49,16 +49,16 @@ int main(int argc, char **argv)
 	lista_livros[6] = (livro){ .nome = "Structured Computer Organization", .preco = 59250};
 	lista_livros[7] = (livro){ .nome = "Os Sete", .preco = 22050};
 	lista_livros[8] = (livro){ .nome = "Adventures of Vegan Vampire", .preco = 2570};
-
+	lista_livros[8] = (livro){ .nome = "Revolucao dos bixos", .preco = 2380};
 
 	if (argc < 2) {
-		imprimir_json(lista_livros);
+		imprimir_json(lista_livros, MAX_LIVROS);
 		return 0;
 	}
 
 	int opcao = argv[1][0] - '0';
 
-	if (opcao < 4 && opcao > 0) {
+	if (opcao < 4 && opcao >= 0) {
 		sort(lista_livros, MAX_LIVROS, lista_condicoes[opcao]);
 		imprimir_json(lista_livros);
 		return 0;
@@ -81,7 +81,7 @@ int sort(livro *lista, int t, condicao cf)
 	for (int i = 1; i < t; ++i) {
 		livro tmp = lista[i];
 		int j = i;
-		while (cf(tmp, lista[j - 1])) {
+		while (j > 0 && cf(tmp, lista[j - 1])) {
 			lista[j] = lista[j - 1];
 			--j;
 		}
@@ -133,11 +133,11 @@ static inline int nome_decrescente(livro l1, livro l2)
 	return 0;
 }
 
-void imprimir_json(livro lista_livros[])
+void imprimir_json(livro lista_livros[], int size)
 {
 	printf("[");
 
-	for (int i = 0; lista_livros[i].preco != 0; i++) {
+	for (int i = 0; i < size; i++) {
 
 		printf("{\"nome\":\"%s\",\"preco\":%d}",
 				lista_livros[i].nome, lista_livros[i].preco
