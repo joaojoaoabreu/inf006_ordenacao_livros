@@ -36,20 +36,18 @@ condicao lista_condicoes[4] = {
 
 int main(int argc, char **argv)
 {
-	livro lista_livros[MAX_LIVROS] = { 0 };
-
-	// Como não inicializei direto eu tive que fazer um typecast para passar os dados
-	// como se fossem uma variável do tipo livro.
-	lista_livros[0] = (livro){ .nome = "The Hobbit", .preco = 5090};
-	lista_livros[1] = (livro){ .nome = "Clean Code", .preco = 21080};
-	lista_livros[2] = (livro){ .nome = "1984", .preco = 3090}; // Ótimo livro, tenho que acabar de ler ele ainda
-	lista_livros[3] = (livro){ .nome = "Dune", .preco = 10000};
-	lista_livros[4] = (livro){ .nome = "The C Programming Language", .preco = 79900};
-	lista_livros[5] = (livro){ .nome = "C: A Modern Approach", .preco = 295000};
-	lista_livros[6] = (livro){ .nome = "Structured Computer Organization", .preco = 59250};
-	lista_livros[7] = (livro){ .nome = "Os Sete", .preco = 22050};
-	lista_livros[8] = (livro){ .nome = "Adventures of Vegan Vampire", .preco = 2570};
-	lista_livros[8] = (livro){ .nome = "Revolucao dos bixos", .preco = 2380};
+	livro lista_livros[MAX_LIVROS] = {
+		{ .nome = "The Hobbit", .preco = 5090},
+		{ .nome = "Clean Code", .preco = 21080},
+		{ .nome = "1984", .preco = 3090}, // Ótimo livro, tenho que acabar de ler ele ainda
+		{ .nome = "Dune", .preco = 10000},
+		{ .nome = "The C Programming Language", .preco = 79900},
+		{ .nome = "C: A Modern Approach", .preco = 295000},
+		{ .nome = "Structured Computer Organization", .preco = 59250},
+		{ .nome = "Os Sete", .preco = 22050},
+		{ .nome = "Adventures of Vegan Vampire", .preco = 2570},
+		{ .nome = "Revolucao dos bixos", .preco = 2380}
+	};
 
 	if (argc < 2) {
 		imprimir_json(lista_livros, MAX_LIVROS);
@@ -60,7 +58,7 @@ int main(int argc, char **argv)
 
 	if (opcao < 4 && opcao >= 0) {
 		sort(lista_livros, MAX_LIVROS, lista_condicoes[opcao]);
-		imprimir_json(lista_livros);
+		imprimir_json(lista_livros, MAX_LIVROS);
 		return 0;
 	}
 
@@ -76,9 +74,9 @@ int main(int argc, char **argv)
  ***************************************************************
  */
 
-int sort(livro *lista, int t, condicao cf) 
+int sort(livro *lista, int size, condicao cf) 
 {	// Por enquanto um insertion. A gente pode mudar pra outra coisa dps
-	for (int i = 1; i < t; ++i) {
+	for (int i = 1; i < size; ++i) {
 		livro tmp = lista[i];
 		int j = i;
 		while (j > 0 && cf(tmp, lista[j - 1])) {
