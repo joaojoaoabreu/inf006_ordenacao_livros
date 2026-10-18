@@ -40,15 +40,15 @@ int main(int argc, char **argv)
 
 	// Como não inicializei direto eu tive que fazer um typecast para passar os dados
 	// como se fossem uma variável do tipo livro.
-	lista_livros[0] = (livro){ .nome = "The Hobbit", .preco = 50};
-	lista_livros[1] = (livro){ .nome = "Clean Code", .preco = 210};
-	lista_livros[2] = (livro){ .nome = "1984", .preco = 30}; // Ótimo livro, tenho que acabar de ler ele ainda
-	lista_livros[3] = (livro){ .nome = "Dune", .preco = 100};
-	lista_livros[4] = (livro){ .nome = "The C Programming Language", .preco = 7990};
-	lista_livros[5] = (livro){ .nome = "C: A Modern Approach", .preco = 2950};
-	lista_livros[6] = (livro){ .nome = "Structured Computer Organization", .preco = 592};
-	lista_livros[7] = (livro){ .nome = "Os Sete", .preco = 220};
-	lista_livros[8] = (livro){ .nome = "Adventures of Vegan Vampire", .preco = 25};
+	lista_livros[0] = (livro){ .nome = "The Hobbit", .preco = 5090};
+	lista_livros[1] = (livro){ .nome = "Clean Code", .preco = 21080};
+	lista_livros[2] = (livro){ .nome = "1984", .preco = 3090}; // Ótimo livro, tenho que acabar de ler ele ainda
+	lista_livros[3] = (livro){ .nome = "Dune", .preco = 10000};
+	lista_livros[4] = (livro){ .nome = "The C Programming Language", .preco = 79900};
+	lista_livros[5] = (livro){ .nome = "C: A Modern Approach", .preco = 295000};
+	lista_livros[6] = (livro){ .nome = "Structured Computer Organization", .preco = 59250};
+	lista_livros[7] = (livro){ .nome = "Os Sete", .preco = 22050};
+	lista_livros[8] = (livro){ .nome = "Adventures of Vegan Vampire", .preco = 2570};
 
 
 	if (argc < 2) {
