@@ -15,6 +15,7 @@ typedef struct {
 typedef int (*condicao)(livro, livro);
 
 int sort(livro *lista, int t, condicao cf);
+void imprimir_json(livro lista_livros[]);
 static inline int preco_crescente(livro l1, livro l2);
 static inline int preco_decrescente(livro l1, livro l2);
 
@@ -35,19 +36,36 @@ condicao lista_condicoes[4] = {
 
 int main(int argc, char **argv)
 {
-	livro lista_livros[MAX_LIVROS];
+	livro lista_livros[MAX_LIVROS] = { 0 };
 
-	if (argc != 2)
-		return 1;
+	// Como não inicializei direto eu tive que fazer um typecast para passar os dados
+	// como se fossem uma variável do tipo livro.
+	lista_livros[0] = (livro){ .nome = "The Hobbit", .preco = 50};
+	lista_livros[1] = (livro){ .nome = "Clean Code", .preco = 210};
+	lista_livros[2] = (livro){ .nome = "1984", .preco = 30}; // Ótimo livro, tenho que acabar de ler ele ainda
+	lista_livros[3] = (livro){ .nome = "Dune", .preco = 100};
+	lista_livros[4] = (livro){ .nome = "The C Programming Language", .preco = 7990};
+	lista_livros[5] = (livro){ .nome = "C: A Modern Approach", .preco = 2950};
+	lista_livros[6] = (livro){ .nome = "Structured Computer Organization", .preco = 592};
+	lista_livros[7] = (livro){ .nome = "Os Sete", .preco = 220};
+	lista_livros[8] = (livro){ .nome = "Adventures of Vegan Vampire", .preco = 25};
+
+
+	if (argc < 2) {
+		imprimir_json(lista_livros);
+		return 0;
+	}
 
 	int opcao = argv[1][0] - '0';
 
-	if (opcao > 4 || opcao < 0)
-		return 1;
+	if (opcao < 4 && opcao > 0) {
+		sort(lista_livros, MAX_LIVROS, lista_condicoes[opcao]);
+		imprimir_json(lista_livros);
+		return 0;
+	}
 
-	sort(lista_livros, MAX_LIVROS, lista_condicoes[opcao]);
-
-	return 0;
+	printf("{\"erro\":\"ordenacao invalida\"}\n");
+	return 1;
 }
 
 /*
@@ -113,4 +131,22 @@ static inline int nome_decrescente(livro l1, livro l2)
 			return 1;
 	}
 	return 0;
+}
+
+void imprimir_json(livro lista_livros[])
+{
+	printf("[");
+
+	for (int i = 0; lista_livros[i].preco != 0; i++) {
+
+		printf("{\"nome\":\"%s\",\"preco\":%d}",
+				lista_livros[i].nome, lista_livros[i].preco
+				);
+
+		if (lista_livros[i].preco != 0 && lista_livros[i + 1].preco != 0) {
+			printf(",");
+		}
+	}
+
+	printf("]\n");
 }
