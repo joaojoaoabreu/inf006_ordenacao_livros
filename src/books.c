@@ -1,151 +1,184 @@
 #include <stdio.h>
-#include <string.h>
+#include <string.h> // Fixed: Added for strcmp()
 
-#define MAX_LIVROS 20
+#define MAX_LIVROS 10
+#define ORDENAR_ERRO -1
+#define ORDENAR_SUCESSO -2
 
 typedef struct {
 	char nome[100];
 	int preco;
 } livro;
 
-/* =========================
-   ORDENAÇÃO POR NOME
-   ========================= */
+// Ponteiro pra função que será implementado em breve pra criar função de ordenação
+// genérica que puxa uma função de condição para determinar como será ordenado o objeto
+typedef int (*condicao)(livro, livro);
 
-int ordenar_nome(livro lista_livros[], int numlivros)
-{
-	livro tro_K;
+int sort(livro *lista, int t, condicao cf);
+void imprimir_json(livro lista_livros[], int size);
+static inline int preco_crescente(livro l1, livro l2);
+static inline int preco_decrescente(livro l1, livro l2);
+static inline int nome_crescente(livro l1, livro l2);
+static inline int nome_decrescente(livro l1, livro l2);
+char minuscula(char letra);
 
-	if (numlivros == 0) {
-		return -1;
-	}
+condicao lista_condicoes[4] = {
+	preco_crescente,
+	preco_decrescente,
+	nome_crescente,
+	nome_decrescente
+};
 
-	for (int i = 0; i < numlivros - 1; i++) {
+// Ordenar preço em ordem crescente 	-> 0
+// Ordenar preço em ordem decrescente 	-> 1
+// Ordenar nome em ordem crescente		-> 2
+// Ordenar nome em ordem decrescente 	-> 3
 
-		for (int j = 0; j < numlivros - i - 1; j++) {
-
-			if (strcmp(lista_livros[j].nome, lista_livros[j + 1].nome) > 0) {
-
-				tro_K = lista_livros[j];
-
-				lista_livros[j] = lista_livros[j + 1];
-
-				lista_livros[j + 1] = tro_K;
-			}
-		}
-	}
-
-	return 0;
-}
-
-/* =========================
-   ORDENAÇÃO POR PREÇO
-   ========================= */
-
-int ordenar_preco_crescente(livro lista_livros[], int numlivros)
-{
-	livro tro_K;
-
-	if (numlivros == 0) {
-		return -1;
-	}
-
-	for (int i = 0; i < numlivros - 1; i++) {
-
-		for (int j = 0; j < numlivros - i - 1; j++) {
-
-			if (lista_livros[j].preco > lista_livros[j + 1].preco) {
-
-				tro_K = lista_livros[j];
-
-				lista_livros[j] = lista_livros[j + 1];
-
-				lista_livros[j + 1] = tro_K;
-			}
-		}
-	}
-
-	return 0;
-}
-
-/* =========================
-   IMPRIMIR JSON
-   ========================= */
-
-void imprimir_json(livro lista_livros[], int numlivros)
-{
-	printf("[");
-
-	for (int i = 0; i < numlivros; i++) {
-
-		printf("{\"nome\":\"%s\",\"preco\":%d}", lista_livros[i].nome,
-		       lista_livros[i].preco);
-
-		if (i < numlivros - 1) {
-			printf(",");
-		}
-	}
-
-	printf("]\n");
-}
-
-/* =========================
-   MAIN
-   ========================= */
-
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	livro lista_livros[MAX_LIVROS] = {
-
-		{"The Hobbit", 3990},
-		{"Clean Code", 8990},
-		{"1984", 2990},
-		{"Dune", 5990},
-		{"The C Programming Language", 7990}
-
+		{ .nome = "The Hobbit", .preco = 5090},
+		{ .nome = "Clean Code", .preco = 21080},
+		{ .nome = "1984", .preco = 3090}, // Ótimo livro, tenho que acabar de ler ele ainda
+		{ .nome = "Dune", .preco = 10000},
+		{ .nome = "The C Programming Language", .preco = 79900},
+		{ .nome = "C: A Modern Approach", .preco = 295000},
+		{ .nome = "Structured Computer Organization", .preco = 59250},
+		{ .nome = "Os Sete", .preco = 22050},
+		{ .nome = "Adventures of Vegan Vamp", .preco = 2570},
+		{ .nome = "Revolucao dos bichos", .preco = 2380}
 	};
 
-	int numlivros = 5;
-
-	/*
-	   Nenhum argumento:
-	   retorna lista original
-	*/
-
-	if (argc == 1) {
-
-		imprimir_json(lista_livros, numlivros);
-
+	if (argc < 2) {
+		imprimir_json(lista_livros, MAX_LIVROS);
 		return 0;
 	}
 
-	/*
-	   Ordenar por nome
-	*/
+	int opcao = argv[1][0] - '0';
 
-	if (strcmp(argv[1], "nome") == 0) {
-
-		ordenar_nome(lista_livros, numlivros);
-
-		imprimir_json(lista_livros, numlivros);
-
-		return 0;
-	}
-
-	/*
-	   Ordenar por preço
-	*/
-
-	if (strcmp(argv[1], "preco") == 0) {
-
-		ordenar_preco_crescente(lista_livros, numlivros);
-
-		imprimir_json(lista_livros, numlivros);
-
+	if (opcao < 4 && opcao >= 0) {
+		sort(lista_livros, MAX_LIVROS, lista_condicoes[opcao]);
+		imprimir_json(lista_livros, MAX_LIVROS);
 		return 0;
 	}
 
 	printf("{\"erro\":\"ordenacao invalida\"}\n");
+	return 1;
+}
+
+/*
+ * Criar condições que se encaisem nesse molde
+ *
+ ***************************************************************
+ **sort(lista_livros, tamanho_lista, ponteiro_funcao_condicao)**
+ ***************************************************************
+ */
+
+int sort(livro *lista, int size, condicao cf)
+{	// Por enquanto um insertion. A gente pode mudar pra outra coisa dps
+	for (int i = 1; i < size; ++i) {
+		livro tmp = lista[i];
+		int j = i;
+		while (j > 0 && cf(tmp, lista[j - 1])) {
+			lista[j] = lista[j - 1];
+			--j;
+		}
+		lista[j] = tmp;
+	}
 
 	return 1;
+}
+
+static inline int preco_crescente(livro l1, livro l2)
+{
+	if (l1.preco < l2.preco)
+		return 1;
+
+	return 0;
+}
+
+static inline int preco_decrescente(livro l1, livro l2)
+{
+	if (l1.preco > l2.preco)
+		return 1;
+
+	return 0;
+}
+
+static inline int nome_crescente(livro l1, livro l2)
+{
+    int i = 0;
+
+    while (l1.nome[i] && l2.nome[i]) {
+
+        char c1 = minuscula(l1.nome[i]);
+        char c2 = minuscula(l2.nome[i]);
+
+        if (c1 < c2)
+            return 1;
+
+        if (c1 > c2)
+            return 0;
+
+        i++;
+    }
+
+    // If one is a prefix of the other,
+    // the shorter name comes first.
+    if (!l1.nome[i] && l2.nome[i])
+        return 1;
+
+    return 0;
+}
+
+static inline int nome_decrescente(livro l1, livro l2)
+{
+    int i = 0;
+
+    while (l1.nome[i] && l2.nome[i]) {
+
+        char c1 = minuscula(l1.nome[i]);
+        char c2 = minuscula(l2.nome[i]);
+
+        if (c1 > c2)
+            return 1;
+
+        if (c1 < c2)
+            return 0;
+
+        i++;
+    }
+
+    // For descending order, the longer name comes first
+    // when one is a prefix of the other.
+    if (!l1.nome[i] && l2.nome[i])
+        return 0;
+
+    return 1;
+}
+
+void imprimir_json(livro lista_livros[], int size)
+{
+    printf("[");
+
+    for (int i = 0; i < size; i++) {
+
+        printf(
+            "{\"nome\":\"%s\",\"preco\":%d}",
+            lista_livros[i].nome,
+            lista_livros[i].preco
+        );
+
+        if (i < size - 1) {
+            printf(",");
+        }
+    }
+
+    printf("]\n");
+}
+
+char minuscula(char letra){
+    char min=letra;
+    if(min>='A' && min<='Z') min+=32;
+    return min;
 }
