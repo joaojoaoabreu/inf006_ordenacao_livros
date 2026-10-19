@@ -18,9 +18,9 @@ int sort(livro *lista, int t, condicao cf);
 void imprimir_json(livro lista_livros[], int size);
 static inline int preco_crescente(livro l1, livro l2);
 static inline int preco_decrescente(livro l1, livro l2);
-
 static inline int nome_crescente(livro l1, livro l2);
 static inline int nome_decrescente(livro l1, livro l2);
+char minuscula(char letra);
 
 condicao lista_condicoes[4] = {
 	preco_crescente,
@@ -45,8 +45,8 @@ int main(int argc, char **argv)
 		{ .nome = "C: A Modern Approach", .preco = 295000},
 		{ .nome = "Structured Computer Organization", .preco = 59250},
 		{ .nome = "Os Sete", .preco = 22050},
-		{ .nome = "Adventures of Vegan Vampire", .preco = 2570},
-		{ .nome = "Revolucao dos bixos", .preco = 2380}
+		{ .nome = "Adventures of Vegan Vamp", .preco = 2570},
+		{ .nome = "Revolucao dos bichos", .preco = 2380}
 	};
 
 	if (argc < 2) {
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
  ***************************************************************
  */
 
-int sort(livro *lista, int size, condicao cf) 
+int sort(livro *lista, int size, condicao cf)
 {	// Por enquanto um insertion. A gente pode mudar pra outra coisa dps
 	for (int i = 1; i < size; ++i) {
 		livro tmp = lista[i];
@@ -108,11 +108,7 @@ static inline int preco_decrescente(livro l1, livro l2)
 static inline int nome_crescente(livro l1, livro l2)
 {
 	for (int i = 0; l1.nome[i] && l2.nome[i]; ++i) {
-		if (l1.nome[i] == -61 || l2.nome[i] == -61)
-			continue;
-		if (l1.nome[i] == ' ' || l2.nome[i] == ' ')
-			continue;
-		if (l1.nome[i] < l2.nome[i])
+		if (minuscula(l1.nome[i]) < minuscula(l2.nome[i]))
 			return 1;
 	}
 	return 0;
@@ -121,11 +117,7 @@ static inline int nome_crescente(livro l1, livro l2)
 static inline int nome_decrescente(livro l1, livro l2)
 {
 	for (int i = 0; l1.nome[i] && l2.nome[i]; ++i) {
-		if (l1.nome[i] == -61 || l2.nome[i] == -61)
-			continue;
-		if (l1.nome[i] == ' ' || l2.nome[i] == ' ')
-			continue;
-		if (l1.nome[i] > l2.nome[i])
+		if (minuscula(l1.nome[i]) > minuscula(l2.nome[i]))
 			return 1;
 	}
 	return 0;
@@ -149,3 +141,8 @@ void imprimir_json(livro lista_livros[], int size)
 	printf("]\n");
 }
 
+char minuscula(char letra){
+    char min=letra;
+    if(min>='A' && min<='Z') min+=32;
+    return min;
+}
